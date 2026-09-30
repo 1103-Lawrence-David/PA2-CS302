@@ -1,12 +1,11 @@
-#include <iostream>
-using namespace std;
+#include "Position.h"
 
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
 
 template<typename T>
-class ArrayList{
+class ArrayList{ //mostly feature complete, god i hope it works. 
     T* data;
     int length;
     int capacity;
@@ -17,8 +16,9 @@ class ArrayList{
             length = 0;
             data = nullptr;
         }
-        ArrayList(int c){
+        ArrayList(int c, int l){
             capacity = c;
+            length = l;
             data = new T[capacity];
         }
         ArrayList(const ArrayList& rhs){
@@ -46,28 +46,71 @@ class ArrayList{
                 return false;
             }
         }
+
         bool validIn(int i){
-            if(int i > length){
+            if(i > length || i < 0){
                 return false;
             }
             else{
                 return true;
             }
         }
-        void insert(int index, T d){
-            int i = 0;
-            bool b = validIn(index);
-            if(i < index && b == true){
-                
+
+        void insert(int target, T d){ //works
+            bool b = validIn(target);
+            if(b == false){
+                return;
             }
+            length++;
+            if(length >= capacity){
+                resize();
+            }
+            
+            T* da = new T[capacity];
+            
+            
+            for(int i = 0; i < target; i++){
+                da[i] = data[i];
+            }
+            da[target] = d;
+            for(int i = target+1; i < length; i++){
+                da[i] = data[i-1];
+            }
+            
+            delete [] data;
+            data = da;
         }
 
-        void remove(){
+        void remove(int target){ //works
+            bool b = validIn(target);
+            if(b == false){
+                return;
+            }
+            T* da = new T[capacity];
+            for(int i = 0; i < target; i++){
+                da[i] = data[i];
+            }
+            for(int i = target+1; i < length; i++){
+                da[i-1] = data[i];
+            }
+            
+            delete [] data;
+            data = da;
+            length--;
 
+        }
+
+        void display(){ //debugging
+            for(int i = 0; i < length; i++){
+                cout << data[i] << endl;
+            }
         }
 
         void resize(){
             if(length >= capacity){
+                if(capacity == 0){
+                    capacity += 5;
+                }
                 int newCapacity = capacity *2;
                 T* newData = new T[newCapacity];
                 for(int i = 0; i < length; i++){
