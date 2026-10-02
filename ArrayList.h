@@ -1,5 +1,6 @@
-#include "Position.h"
-
+//#include "Position.h"
+#include <iostream>
+using namespace std;
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 

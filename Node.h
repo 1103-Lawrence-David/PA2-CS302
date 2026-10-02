@@ -1,24 +1,44 @@
-#include <iostream>
-using namespace std;
+#include "Position.h"
 
 #ifndef NODE_H
 #define NODE_H
 
+template <typename T>
 class Node{
-    int data;
-    Node* next;
+    T data;
+    Node<T>* next;
 
     public:
-        Node();
-        Node(int, Node*);
-        Node(const Node&);
+        Node(){
+            data = T();
+            next = nullptr;
+        }
 
-        int getData();
-        void setData(int);
+        Node(T d, Node<T>* n){
+            data = d;
+            next = n; 
+        }
 
-        Node* getNext();
-        void setNode(Node*);
+        Node(const Node<T>& rhs){
+            data = rhs.data;
+            next = rhs.next;
+        }
 
+        T getData(){
+            return data;
+        }
+
+        void setData(T d){
+            data = d;
+        }
+
+        Node<T>* getNext(){
+            return next;
+        }
+
+        void setNext(Node<T>* n){
+            next = n;
+        }    
 };
 
 #endif
