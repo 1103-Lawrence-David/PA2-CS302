@@ -20,14 +20,25 @@ class ArrayList{ //mostly feature complete, god i hope it works.
         ArrayList(int c, int l){
             capacity = c;
             length = l;
-            data = new T[capacity];
+            
+            if(capacity > 0){
+                data = new T[capacity];
+            }
+            else{
+                data = nullptr;
+            }
         }
         ArrayList(const ArrayList& rhs){
             capacity = rhs.capacity;
             length = rhs.length;
-            data = new T[capacity];
-            for(int i = 0; i < length; i++){
-                data[i] = rhs.data[i];
+            if(capacity > 0){
+                data = new T[capacity];
+                for(int i = 0; i < length; i++){
+                    data[i] = rhs.data[i];
+                }
+            }
+            else{
+                data = nullptr;
             }
         }
 
@@ -62,7 +73,9 @@ class ArrayList{ //mostly feature complete, god i hope it works.
             if(b == false){
                 return;
             }
+
             length++;
+
             if(length >= capacity){
                 resize();
             }
@@ -110,13 +123,19 @@ class ArrayList{ //mostly feature complete, god i hope it works.
         void resize(){
             if(length >= capacity){
                 if(capacity == 0){
-                    capacity += 5;
+                    capacity = 5;
                 }
-                int newCapacity = capacity *2;
+
+                else{
+                    newCapacity = capacity * 2;
+                }
+                
                 T* newData = new T[newCapacity];
+                
                 for(int i = 0; i < length; i++){
                     newData[i] = data[i];
                 }
+
                 delete [] data;
                 data = newData;
                 capacity = newCapacity;
@@ -124,12 +143,25 @@ class ArrayList{ //mostly feature complete, god i hope it works.
         }
 
         ArrayList& operator=(const ArrayList& rhs){
+            if(this == &rhs){
+                return *this;
+            }
+
+            delete [] data;
             capacity = rhs.capacity;
             length = rhs.length;
-            data = new T[capacity];
-            for(int i = 0; i < length; i++){
-                data[i] = rhs.data[i];
+           
+            if(capacity > 0){
+                data = new T[capacity];
+                for(int i = 0; i < length; i++){
+                    data[i] = rhs.data[i];
+                }
             }
+
+            else{
+                data = nullptr;
+            }
+
             return *this;
         }
         
