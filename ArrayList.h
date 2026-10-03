@@ -1,78 +1,87 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
-
 #include <iostream>
+using namespace std;
 
 template<typename T>
-class ArrayList {
+class ArrayList{
     T* data;
     int length;
     int capacity;
 
 public:
-    ArrayList() {
+    ArrayList(){
         capacity = 0;
         length = 0;
         data = nullptr;
     }
 
-    ArrayList(int c, int l) {
+    ArrayList(int c, int l){
         capacity = c;
         length = l;
-        if (capacity > 0) {
+        if(capacity > 0){
             data = new T[capacity];
-        } else {
+        } 
+        else{
             data = nullptr;
         }
     }
 
-    ArrayList(const ArrayList& rhs) {
+    ArrayList(const ArrayList& rhs){
         capacity = rhs.capacity;
         length = rhs.length;
-        if (capacity > 0) {
+        if(capacity > 0){
             data = new T[capacity];
-            for (int i = 0; i < length; i++) {
+            for(int i = 0; i < length; i++){
                 data[i] = rhs.data[i];
             }
-        } else {
+        } 
+        else{
             data = nullptr;
         }
     }
 
-    int getLength() { return length; }
-    int getCapacity() { return capacity; }
-    bool isEmpty() { return length == 0; }
+    int getLength(){ 
+        return length; 
+    }
+    int getCapacity(){ 
+        return capacity;
+    }
+    bool isEmpty(){
+        return length == 0; 
+    }
 
-    bool validIn(int i) {
-        if (i > length || i < 0) {
+    bool validIn(int i){
+        if(i > length || i < 0){
             return false;
         }
         return true;
     }
 
-    T get(int index) {
-        if (index < 0 || index >= length) {
+    T get(int index){
+        if(index < 0 || index >= length){
             return T();
         }
         return data[index];
     }
 
-    void set(int index, T val) {
-        if (index >= 0 && index < length) {
+    void set(int index, T val){
+        if(index >= 0 && index < length){
             data[index] = val;
         }
     }
 
-    void insert(int target, T d) {
-        if (!validIn(target)) return;
+    void insert(int target, T d){
+        if(!validIn(target)) {
+            return;
+        }
         
-        // Ensure capacity safely beforehand
-        if (length >= capacity) {
+        if(length >= capacity){
             resize();
         }
         
-        // Shift elements right inline within the pre-allocated pool
-        for (int i = length; i > target; i--) {
+        
+        for(int i = length; i > target; i--){
             data[i] = data[i - 1];
         }
         
@@ -80,40 +89,43 @@ public:
         length++;
     }
 
-    void remove(int target) {
-        if (target < 0 || target >= length) return;
-        
-        // Shift elements left inline within the pre-allocated pool
-        for (int i = target; i < length - 1; i++) {
+    void remove(int target){
+        if(target < 0 || target >= length){ 
+            return;
+        }
+
+        for(int i = target; i < length - 1; i++){
             data[i] = data[i + 1];
         }
         
         length--;
     }
 
-    void clear() {
+    void clear(){
         delete[] data;
         data = nullptr;
         length = 0;
         capacity = 0;
     }
 
-    void display() {
-        for (int i = 0; i < length; i++) {
-            std::cout << data[i] << std::endl;
+    void display(){
+        for(int i = 0; i < length; i++){
+            cout << data[i] << endl;
         }
     }
 
-    void resize() {
+    void resize(){
         int newCapacity;
-        if (capacity == 0) {
+        if(capacity == 0){
             newCapacity = 5;
-        } else {
+        }
+
+        else{
             newCapacity = capacity * 2;
         }
         
         T* newData = new T[newCapacity];
-        for (int i = 0; i < length; i++) {
+        for(int i = 0; i < length; i++){
             newData[i] = data[i];
         }
         
@@ -122,23 +134,26 @@ public:
         capacity = newCapacity;
     }
 
-    ArrayList& operator=(const ArrayList& rhs) {
-        if (this == &rhs) return *this;
+    ArrayList& operator=(const ArrayList& rhs){
+        if(this == &rhs){
+            return *this;
+        }
         delete[] data;
         capacity = rhs.capacity;
         length = rhs.length;
-        if (capacity > 0) {
+        if(capacity > 0){
             data = new T[capacity];
-            for (int i = 0; i < length; i++) {
+            for(int i = 0; i < length; i++){
                 data[i] = rhs.data[i];
             }
-        } else {
+        }
+        else{
             data = nullptr;
         }
         return *this;
     }
     
-    ~ArrayList() { 
+    ~ArrayList(){ 
         delete[] data; 
     }
 };
