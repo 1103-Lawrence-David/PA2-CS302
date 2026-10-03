@@ -1,172 +1,145 @@
-//#include "Position.h"
-#include <iostream>
-using namespace std;
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
+#include <iostream>
 
 template<typename T>
-class ArrayList{ //mostly feature complete, god i hope it works. 
+class ArrayList {
     T* data;
     int length;
     int capacity;
 
-    public:
-        ArrayList(){
-            capacity = 0;
-            length = 0;
+public:
+    ArrayList() {
+        capacity = 0;
+        length = 0;
+        data = nullptr;
+    }
+
+    ArrayList(int c, int l) {
+        capacity = c;
+        length = l;
+        if (capacity > 0) {
+            data = new T[capacity];
+        } else {
             data = nullptr;
         }
-        ArrayList(int c, int l){
-            capacity = c;
-            length = l;
-            
-            if(capacity > 0){
-                data = new T[capacity];
+    }
+
+    ArrayList(const ArrayList& rhs) {
+        capacity = rhs.capacity;
+        length = rhs.length;
+        if (capacity > 0) {
+            data = new T[capacity];
+            for (int i = 0; i < length; i++) {
+                data[i] = rhs.data[i];
             }
-            else{
-                data = nullptr;
-            }
+        } else {
+            data = nullptr;
         }
-        ArrayList(const ArrayList& rhs){
-            capacity = rhs.capacity;
-            length = rhs.length;
-            if(capacity > 0){
-                data = new T[capacity];
-                for(int i = 0; i < length; i++){
-                    data[i] = rhs.data[i];
-                }
-            }
-            else{
-                data = nullptr;
-            }
+    }
+
+    int getLength() { return length; }
+    int getCapacity() { return capacity; }
+    bool isEmpty() { return length == 0; }
+
+    bool validIn(int i) {
+        if (i > length || i < 0) {
+            return false;
         }
+        return true;
+    }
 
-        int getLength(){
-            return length;
+    T get(int index) {
+        if (index < 0 || index >= length) {
+            return T();
         }
+        return data[index];
+    }
 
-        int getCapacity(){
-            return capacity;
+    void set(int index, T val) {
+        if (index >= 0 && index < length) {
+            data[index] = val;
         }
+    }
 
-        bool isEmpty(){
-            if(length == 0){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-
-        bool validIn(int i){
-            if(i > length || i < 0){
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-
-        void insert(int target, T d){ //works
-            bool b = validIn(target);
-            if(b == false){
-                return;
-            }
-
-            length++;
-
-            if(length >= capacity){
-                resize();
-            }
-            
-            T* da = new T[capacity];
-            
-            
-            for(int i = 0; i < target; i++){
-                da[i] = data[i];
-            }
-            da[target] = d;
-            for(int i = target+1; i < length; i++){
-                da[i] = data[i-1];
-            }
-            
-            delete [] data;
-            data = da;
-        }
-
-        void remove(int target){ //works
-            bool b = validIn(target);
-            if(b == false){
-                return;
-            }
-            T* da = new T[capacity];
-            for(int i = 0; i < target; i++){
-                da[i] = data[i];
-            }
-            for(int i = target+1; i < length; i++){
-                da[i-1] = data[i];
-            }
-            
-            delete [] data;
-            data = da;
-            length--;
-
-        }
-
-        void display(){ //debugging
-            for(int i = 0; i < length; i++){
-                cout << data[i] << endl;
-            }
-        }
-
-        void resize(){
-            if(length >= capacity){
-                if(capacity == 0){
-                    capacity = 5;
-                }
-
-                else{
-                    newCapacity = capacity * 2;
-                }
-                
-                T* newData = new T[newCapacity];
-                
-                for(int i = 0; i < length; i++){
-                    newData[i] = data[i];
-                }
-
-                delete [] data;
-                data = newData;
-                capacity = newCapacity;
-            }
-        }
-
-        ArrayList& operator=(const ArrayList& rhs){
-            if(this == &rhs){
-                return *this;
-            }
-
-            delete [] data;
-            capacity = rhs.capacity;
-            length = rhs.length;
-           
-            if(capacity > 0){
-                data = new T[capacity];
-                for(int i = 0; i < length; i++){
-                    data[i] = rhs.data[i];
-                }
-            }
-
-            else{
-                data = nullptr;
-            }
-
-            return *this;
+    void insert(int target, T d) {
+        if (!validIn(target)) return;
+        
+        // Ensure capacity safely beforehand
+        if (length >= capacity) {
+            resize();
         }
         
-        ~ArrayList(){
-            delete [] data;
+        // Shift elements right inline within the pre-allocated pool
+        for (int i = length; i > target; i--) {
+            data[i] = data[i - 1];
         }
+        
+        data[target] = d;
+        length++;
+    }
+
+    void remove(int target) {
+        if (target < 0 || target >= length) return;
+        
+        // Shift elements left inline within the pre-allocated pool
+        for (int i = target; i < length - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        
+        length--;
+    }
+
+    void clear() {
+        delete[] data;
+        data = nullptr;
+        length = 0;
+        capacity = 0;
+    }
+
+    void display() {
+        for (int i = 0; i < length; i++) {
+            std::cout << data[i] << std::endl;
+        }
+    }
+
+    void resize() {
+        int newCapacity;
+        if (capacity == 0) {
+            newCapacity = 5;
+        } else {
+            newCapacity = capacity * 2;
+        }
+        
+        T* newData = new T[newCapacity];
+        for (int i = 0; i < length; i++) {
+            newData[i] = data[i];
+        }
+        
+        delete[] data;
+        data = newData;
+        capacity = newCapacity;
+    }
+
+    ArrayList& operator=(const ArrayList& rhs) {
+        if (this == &rhs) return *this;
+        delete[] data;
+        capacity = rhs.capacity;
+        length = rhs.length;
+        if (capacity > 0) {
+            data = new T[capacity];
+            for (int i = 0; i < length; i++) {
+                data[i] = rhs.data[i];
+            }
+        } else {
+            data = nullptr;
+        }
+        return *this;
+    }
+    
+    ~ArrayList() { 
+        delete[] data; 
+    }
 };
 #endif

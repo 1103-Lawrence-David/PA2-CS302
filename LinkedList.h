@@ -186,6 +186,7 @@ class LinkedList {
 
             delete temp;
             length --;
+            return;
         }
 
         void clear(){

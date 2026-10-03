@@ -21,7 +21,7 @@ class Node{
 
         Node(const Node<T>& rhs){
             data = rhs.data;
-            next = rhs.next;
+            next = nullptr;
         }
 
         T getData(){

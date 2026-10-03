@@ -11,7 +11,6 @@ int SnakeGame::getCustomRandom(int min, int max){
     return min + (int)(randomState % range);
 }
 
-// Spawns food at an unoccupied position
 void SnakeGame::spawnFood(){
     bool invalidLocation = true;
 
@@ -21,7 +20,6 @@ void SnakeGame::spawnFood(){
         int c = getCustomRandom(1, cols - 2);
         food = Position(r, c);
 
-        // Ensure food does not land on the snake body matching alias parameters
         for(int i = 0; i < snake.getLength(); i++){
             if(snake.get(i) == food){
                 invalidLocation = true;
@@ -31,7 +29,6 @@ void SnakeGame::spawnFood(){
     }
 }
 
-// Resets/Initializes game parameters
 void SnakeGame::resetGame(){
     snake.clear();
     score = 0;
@@ -53,7 +50,6 @@ int SnakeGame::getScore(){
     return score; 
 }
 
-// Handles input changes while ignoring instant 180-degree pivots
 void SnakeGame::setDirection(char input){
     if(input == 'W' || input == 'w'){
         direction = 'W';
@@ -72,7 +68,6 @@ void SnakeGame::setDirection(char input){
     }
 }
 
-// Game turn logic loop
 void SnakeGame::update(){
     if (gameOver) return;
 
@@ -95,13 +90,11 @@ void SnakeGame::update(){
         nextHead.column++;
     }
 
-    // Wall Collision Detection
     if(nextHead.row <= 0 || nextHead.row >= rows - 1 || nextHead.column <= 0 || nextHead.column >= cols - 1){
         gameOver = true;
         return;
     }
 
-    // Self-Collision Detection
     for(int i = 0; i < snake.getLength(); i++){
         if(nextHead == snake.get(i)){
             gameOver = true;
@@ -109,24 +102,20 @@ void SnakeGame::update(){
         }
     }
 
-    // Insert new head coordinates forward
     snake.insert(0, nextHead);
 
-    // Food Target Intersection
     if(nextHead == food){
         score += 10;
-        spawnFood(); // Grows automatically by keeping the current tail intact
+        spawnFood();
     }
     else{
-        // Prune the previous tail node to advance forward cleanly
         snake.remove(snake.getLength() - 1);
     }
 }
 
-// Renders the board map grid via basic newlines
 void SnakeGame::draw(){
     for(int i = 0; i < 40; ++i){
-        cout << '\n';
+        cout << endl;
     }
 
     cout << "=== LEGALLY DISTINCT SNAKE ===" << endl;

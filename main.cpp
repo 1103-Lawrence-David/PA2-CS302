@@ -1,9 +1,10 @@
 #include "SnakeGame.h"
 
 int main() {
+    runTestSuite();
     char playAgain = 'Y';
     int sessionSeed = 98765;
-
+    
     while (playAgain == 'Y' || playAgain =='y') {
         SnakeGame game(sessionSeed);
         sessionSeed += 1234; 
